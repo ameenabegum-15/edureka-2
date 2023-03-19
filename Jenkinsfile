@@ -13,14 +13,15 @@ pipeline {
 //             }
 //         }
         stage('Build Docker Image') {
-//             when {
-//                 branch 'master'
-//             }
+            when {
+                branch 'master'
+            }
             steps {
                 script {
-                    app = docker.build(DOCKER_IMAGE_NAME)
-                    app.inside {
-                        sh 'echo Hello, World!'
+                    sh 'docker build -t my-image .'
+//                     app = docker.build(DOCKER_IMAGE_NAME)
+//                     app.inside {
+//                         sh 'echo Hello, World!'
                     }
                 }
             }
@@ -31,9 +32,10 @@ pipeline {
             }
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
+                    sh 'docker push my-image'
+//                     docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+//                         app.push("${env.BUILD_NUMBER}")
+//                         app.push("latest")
                     }
                 }
             }
